@@ -46,6 +46,23 @@ def simplify(head):
     return resp
 
 def fromList(lines,simple=False,member=None):
+    '''
+    >>> data = [(0,'aaa'),
+    ...         (1,'bbb'),
+    ...         (2,'ccc'),
+    ...         (1,'ddd'),
+    ...         (2,'eee'),
+    ...         (2,'fff')]
+    >>> r = fromList(data,simple=True)
+    >>> r == ['aaa',
+    ...       [['bbb',
+    ...         [['ccc', []]]],
+    ...        ['ddd',
+    ...         [['eee', []],
+    ...          ['fff', []]]]]]
+    True
+    '''
+
     root = Node(-4,'')
     ptr = root
     for e in lines:
@@ -111,7 +128,7 @@ def lisp(line,char=None):
 data = "('aaa', ('bbb', ('ccc')), ('ddd', ('eee', 'fff')))"
 #data = "('aaa', ('bbb', (['ccc' for i in range(100)])), ('ddd', ('eee', 'fff')))"
 
-pprint(lisp(data),width=1)
+#pprint(lisp(data),width=1)
 
 
 '''
