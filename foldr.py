@@ -1,33 +1,8 @@
 from pprint import pprint
 
-'''
-Small script to make folding linear data formats into tree structures easy
-'''
 
 
-'''
-One module that accepts data like this:
-
-[(0,'aaa'),
- (1,'bbb'),
- (2,'ccc'),
- (1,'ddd'),
- (2,'eee'),
- (2,'fff')]
-
-and folds it like this:
-
-['aaa',
- [['bbb',
-   [['ccc', []]]],
-  ['ddd',
-   [['eee', []],
-    ['fff', []]]]]]
-
-'''
-
-
-class Node(object):
+class FoldrNode(object):
     def __init__(self,depth,code):
         self.depth = depth
         self.code = code
@@ -45,7 +20,7 @@ def simplify(head):
         resp[1].append(simplify(e))
     return resp
 
-def fromList(lines,simple=False,member=None):
+def fromList(lines,simple=False):
     '''
     >>> data = [(0,'aaa'),
     ...         (1,'bbb'),
@@ -54,25 +29,21 @@ def fromList(lines,simple=False,member=None):
     ...         (2,'eee'),
     ...         (2,'fff')]
     >>> r = fromList(data,simple=True)
-    >>> r == ['aaa',
-    ...       [['bbb',
-    ...         [['ccc', []]]],
-    ...        ['ddd',
-    ...         [['eee', []],
-    ...          ['fff', []]]]]]
+    >>> r == [['aaa',
+    ...        [['bbb',
+    ...          [['ccc', []]]],
+    ...         ['ddd',
+    ...          [['eee', []],
+    ...           ['fff', []]]]]]]
     True
     '''
 
-    root = Node(-4,'')
+    root = FoldrNode(-4,'')
     ptr = root
     for e in lines:
-        if member == None:
-            depth,code = e
-        else:
-            depth = getattr(e,member)
-            code = e
+        depth,code = e
 
-        line = Node(depth,code)
+        line = FoldrNode(depth,code)
 
         if line.depth > ptr.depth:
             ptr.add(line)
@@ -89,9 +60,35 @@ def fromList(lines,simple=False,member=None):
             ptr = ptr.children[-1]
 
     if simple:
-        return simplify(root.children[0])
+        return [simplify(c) for c in root.children]
     else:
-        return root.children[0]
+        return [c for c in root.children]
+
+
+def fromAttribute(lines,attr,simple=False):
+    data = []
+    for e in lines:
+        try:
+            data.append((getattr(e,attr),e))
+        except:
+            # TODO: anything
+            pass
+
+    return fromList(data,simple)
+
+def fromMethod(lines,attr,simple=False):
+    data = []
+    for e in lines:
+        try:
+            data.append((getattr(e,attr)(),e))
+        except:
+            # TODO: anything
+            pass
+
+    return fromList(data,simple)
+
+
+
 
 
 
@@ -101,7 +98,9 @@ data = [(0,'aaa'),
         (2,'ccc'),
         (1,'ddd'),
         (2,'eee'),
-        (2,'fff')]
+        (2,'fff'),
+        (0,'ggg'),
+        (1,'hhh')]
 
 #pprint(fromList(data,simple=True),width=1)
 
@@ -113,22 +112,53 @@ data = [(0,'aaa'),
 
 import re
 
+# TODO: optimize
 def lisp(line,char=None):
     if not char:
         start,finish = '(',')'
     else:
         start,finish = char
 
-    line = re.sub(re.escape(start),r'[',line)
-    line = re.sub(re.escape(finish),r']',line)
-    return eval(line)
+    line = list(line)
+
+    assert(line.count(start) == line.count(finish))
+
+
+    for n in range(1):
+        last = None
+        i = 0
+        while True:
+            if line[i] == start:
+                last = i
+            if line[i] == finish:
+                break
+            if i >= len(line):
+                break
+            i += 1
+
+        if i >= len(line):
+            break
+
+        if last:
+            before = line[:last]
+            during = []
+            for e in line[last+1:i]:
+
+            after = line[i+1:]
+
+
+
+    #line = re.sub(re.escape(start),r'[',line)
+    #line = re.sub(re.escape(finish),r']',line)
+    #return eval(line)
+    return line
 
 
 
 data = "('aaa', ('bbb', ('ccc')), ('ddd', ('eee', 'fff')))"
 #data = "('aaa', ('bbb', (['ccc' for i in range(100)])), ('ddd', ('eee', 'fff')))"
 
-#pprint(lisp(data),width=1)
+pprint(lisp(data),width=1)
 
 
 '''
