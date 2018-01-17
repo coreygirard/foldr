@@ -89,28 +89,15 @@ def fromMethod(lines,attr,simple=False):
 
 
 
+def collapseChars(s):
+    during = [s.pop(0)]
+    while len(s) > 0:
+        if type(during[-1]) == type('string') and type(s[0]) == type('string'):
+            during[-1] += s.pop(0)
+        else:
+            during.append(s.pop(0))
+    return during
 
-
-
-
-data = [(0,'aaa'),
-        (1,'bbb'),
-        (2,'ccc'),
-        (1,'ddd'),
-        (2,'eee'),
-        (2,'fff'),
-        (0,'ggg'),
-        (1,'hhh')]
-
-#pprint(fromList(data,simple=True),width=1)
-
-
-
-
-
-
-
-import re
 
 # TODO: optimize
 def lisp(line,char=None):
@@ -124,70 +111,93 @@ def lisp(line,char=None):
     assert(line.count(start) == line.count(finish))
 
 
-    for n in range(1):
+    while start in line:
         last = None
         i = 0
         while True:
+            if i >= len(line):
+                break
             if line[i] == start:
                 last = i
             if line[i] == finish:
-                break
-            if i >= len(line):
                 break
             i += 1
 
         if i >= len(line):
             break
 
-        if last:
+        if last != None:
             before = line[:last]
-            during = []
-            for e in line[last+1:i]:
+            during = collapseChars(line[last+1:i])
 
             after = line[i+1:]
+            line = before+[during]+after
+
+    return collapseChars(line)
 
 
 
-    #line = re.sub(re.escape(start),r'[',line)
-    #line = re.sub(re.escape(finish),r']',line)
-    #return eval(line)
-    return line
+import ctypes
+a = "hello world"
+idA = id(a)
+print(idA)
+c = ctypes.cast(idA,ctypes.py_object)
+print(c.value)
+c.value = 7
+print(c.value)
+
+#print ctypes.cast(id(a), ctypes.py_object).value
+
+
+class Example(object):
+    def __init__(self, parent, i):
+        self.parent = parent
+        self.i = i
+
+    def __setattr__(self,k,v):
+        self.parent.set(k,v)
+
+class Container(object):
+    def __init__(self):
+        self.vec = [1,2,3,4,5]
+
+    def set(self,k,v):
+        self.vec[k] = v
+
+    def __iter__(self):
+        for i in range(len(self.vec)):
+            yield Example(self,i)
 
 
 
-data = "('aaa', ('bbb', ('ccc')), ('ddd', ('eee', 'fff')))"
-#data = "('aaa', ('bbb', (['ccc' for i in range(100)])), ('ddd', ('eee', 'fff')))"
+container = Container()
+for i in container:
+    print(i)
 
-pprint(lisp(data),width=1)
 
 
 '''
-Another module that accepts data like this:
+def makeIterator(t):
+    for i in range(len(t)):
+        yield id(t[i])
 
-('aaa', ('bbb', ('ccc')), ('ddd', ('eee', 'fff')))
+lst = [1,2,3]
 
-and folds it
+for ptr in makeIterator(lst):
+    print(ptr)
 
-It can also handle:
-
-{
-    'aaa',
-    {
-        'bbb',
-        {
-            'ccc'
-        }
-    },
-    {
-        'ddd',
-        {
-            'eee',
-            'fff'
-        }
-    }
-}
+print(lst)
+'''
 
 
+
+
+
+'''
+for ptr in makeIterator(tree):
+    temp = ptr
+    temp += 1
+    ptr = temp
 '''
 
 

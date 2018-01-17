@@ -62,6 +62,54 @@ class TestFromAttribute(unittest.TestCase):
         self.assertEqual(result[0][1][1][1][0][0].data,'eee')
         self.assertEqual(result[0][1][1][1][1][0].data,'fff')
 
+class TestLisp(unittest.TestCase):
+    def test_lisp(self):
+        data = "('aaa', ('bbb', ('ccc')), ('ddd', ('eee', 'fff')))"
+
+        result = foldr.lisp(data)
+        expected = [["'aaa', ",
+                     ["'bbb', ",
+                      ["'ccc'"]],
+                     ", ",
+                     ["'ddd', ",
+                      ["'eee', 'fff'"]]]]
+        self.assertEqual(result,expected)
+
+class TestLispProgram(unittest.TestCase):
+    def test_lisp_program(self):
+        code = ["{\n",
+                "    aaa\n",
+                "    {\n",
+                "        bbb\n",
+                "        {\n",
+                "            ccc\n",
+                "        }\n",
+                "    }\n",
+                "    {\n",
+                "        ddd\n",
+                "        {\n",
+                "            eee\n",
+                "            fff\n",
+                "        }\n",
+                "    }\n",
+                "}\n"]
+        code = ''.join(code)
+
+        result = foldr.lisp(code,char='{}')
+        pprint(result)
+        expected = [["\n    aaa\n    ",
+                     ["\n        bbb\n        ",
+                      ["\n            ccc\n        "],
+                      "\n    "],
+                     "\n    ",
+                     ["\n        ddd\n        ",
+                      ["\n            eee\n            fff\n        "],
+                      "\n    "],
+                     "\n"],
+                    "\n"]
+        self.assertEqual(result,expected)
+
+
 
 def load_tests(loader, tests, ignore):
     tests.addTests(doctest.DocTestSuite(foldr))
