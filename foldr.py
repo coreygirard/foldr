@@ -137,43 +137,6 @@ def lisp(line,char=None):
 
 
 
-import ctypes
-a = "hello world"
-idA = id(a)
-print(idA)
-c = ctypes.cast(idA,ctypes.py_object)
-print(c.value)
-c.value = 7
-print(c.value)
-
-#print ctypes.cast(id(a), ctypes.py_object).value
-
-
-class Example(object):
-    def __init__(self, parent, i):
-        self.parent = parent
-        self.i = i
-
-    def __setattr__(self,k,v):
-        self.parent.set(k,v)
-
-class Container(object):
-    def __init__(self):
-        self.vec = [1,2,3,4,5]
-
-    def set(self,k,v):
-        self.vec[k] = v
-
-    def __iter__(self):
-        for i in range(len(self.vec)):
-            yield Example(self,i)
-
-
-
-container = Container()
-for i in container:
-    print(i)
-
 
 
 '''
