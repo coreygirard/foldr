@@ -139,29 +139,86 @@ def lisp(line,char=None):
 
 
 
+
+
+
+import ctypes
+from pprint import pprint
+
+tree = [(0,1),
+        (1,2),
+        (2,3),
+        (2,4),
+        (1,5),
+        (2,6),
+        (2,7)]
+
+tree = fromList(tree,simple=True)
+
+pprint(tree, width=20)
+
 '''
-def makeIterator(t):
+
+def get_tree_values(t):
     for i in range(len(t)):
-        yield id(t[i])
+        yield t[i]
 
-lst = [1,2,3]
+def set_tree_values(t,v):
+    for i,e in enumerate(v):
+        t[i] = e
+    return t
 
-for ptr in makeIterator(lst):
-    print(ptr)
 
-print(lst)
+tree = [1,2,3]
+
+
+future = list(get_tree_values(tree))
+print(future)
+future = [1 for i in future]
+tree = set_tree_values(tree,future)
+
+
+print(tree)
+'''
+
+
+
+'''
+for ptr in traverseTree(tree, mode='in-order'):
+    ptr += 1
 '''
 
 
 
 
 
+
+
 '''
-for ptr in makeIterator(tree):
-    temp = ptr
-    temp += 1
-    ptr = temp
+a = "hello world"
+aPtr = id(a)
+print(aPtr)
+c = ctypes.cast(aPtr,ctypes.py_object)
+print(c.value)
+c.value = 7
+print(c.value)
 '''
+
+
+
+'''
+for i,ptr in enumerate(makeIterator(tree, type='in-order')):
+    ptr = i
+'''
+
+
+
+
+
+
+
+
+
 
 
 '''
