@@ -96,7 +96,7 @@ class TestLispProgram(unittest.TestCase):
         code = ''.join(code)
 
         result = foldr.lisp(code,char='{}')
-        pprint(result)
+        #pprint(result)
         expected = [["\n    aaa\n    ",
                      ["\n        bbb\n        ",
                       ["\n            ccc\n        "],

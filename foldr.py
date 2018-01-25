@@ -4,17 +4,51 @@ from pprint import pprint
 
 class FoldrNode(object):
     def __init__(self,depth,code):
+        '''
+        >>> node = FoldrNode(0,'aaa')
+        >>> node.add(FoldrNode(1,'bbb'))
+        >>> node.add(FoldrNode(2,'ccc'))
+
+        >>> node.depth
+        0
+
+        >>> node.code
+        'aaa'
+
+        >>> node.parent
+        '''
+
         self.depth = depth
         self.code = code
         self.parent = None
         self.children = []
 
     def add(self,child):
+        '''
+        >>> node1 = FoldrNode(0,'aaa')
+        >>> node2 = FoldrNode(1,'bbb')
+        >>> node1.add(node2)
+
+        >>> node1.children[0] == node2
+        True
+        >>> node2.parent == node1
+        True
+        '''
+
         child.parent = self
         self.children.append(child)
 
 
 def simplify(head):
+    '''
+    >>> head = FoldrNode(0,'aaa')
+    >>> head.add(FoldrNode(1,'bbb'))
+    >>> head.add(FoldrNode(2,'ccc'))
+
+    >>> simplify(head)
+    ['aaa', [['bbb', []], ['ccc', []]]]
+    '''
+
     resp = [head.code,[]]
     for e in head.children:
         resp[1].append(simplify(e))
@@ -141,8 +175,7 @@ def lisp(line,char=None):
 
 
 
-
-import ctypes
+'''
 from pprint import pprint
 
 tree = [(0,1),
@@ -156,45 +189,17 @@ tree = [(0,1),
 tree = fromList(tree,simple=True)
 
 pprint(tree, width=20)
-
 '''
 
-def get_tree_values(t):
-    for i in range(len(t)):
-        yield t[i]
-
-def set_tree_values(t,v):
-    for i,e in enumerate(v):
-        t[i] = e
-    return t
-
-
-tree = [1,2,3]
-
-
-future = list(get_tree_values(tree))
-print(future)
-future = [1 for i in future]
-tree = set_tree_values(tree,future)
-
-
-print(tree)
+'''
+for i,ptr in enumerate(makeIterator(tree, type='in-order')):
+    ptr = i
 '''
 
-
-
 '''
-for ptr in traverseTree(tree, mode='in-order'):
-    ptr += 1
-'''
+import ctypes
 
 
-
-
-
-
-
-'''
 a = "hello world"
 aPtr = id(a)
 print(aPtr)
@@ -204,25 +209,7 @@ c.value = 7
 print(c.value)
 '''
 
-
-
 '''
-for i,ptr in enumerate(makeIterator(tree, type='in-order')):
-    ptr = i
-'''
-
-
-
-
-
-
-
-
-
-
-
-'''
-
 Get iterator lists for each of depth-first and breadth-first search
 through the tree:
 
