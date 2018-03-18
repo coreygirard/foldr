@@ -1,9 +1,5 @@
-from pprint import pprint
-
-
-
 class FoldrNode(object):
-    def __init__(self,depth,code):
+    def __init__(self, depth, code):
         '''
         >>> node = FoldrNode(0,'aaa')
         >>> node.add(FoldrNode(1,'bbb'))
@@ -23,7 +19,7 @@ class FoldrNode(object):
         self.parent = None
         self.children = []
 
-    def add(self,child):
+    def add(self, child):
         '''
         >>> node1 = FoldrNode(0,'aaa')
         >>> node2 = FoldrNode(1,'bbb')
@@ -49,12 +45,12 @@ def simplify(head):
     ['aaa', [['bbb', []], ['ccc', []]]]
     '''
 
-    resp = [head.code,[]]
-    for e in head.children:
-        resp[1].append(simplify(e))
+    resp = [head.code, []]
+    for node in head.children:
+        resp[1].append(simplify(node))
     return resp
 
-def fromList(lines,simple=False):
+def from_list(lines, simple=False):
     '''
     >>> data = [(0,'aaa'),
     ...         (1,'bbb'),
@@ -62,7 +58,7 @@ def fromList(lines,simple=False):
     ...         (1,'ddd'),
     ...         (2,'eee'),
     ...         (2,'fff')]
-    >>> r = fromList(data,simple=True)
+    >>> r = from_list(data,simple=True)
     >>> r == [['aaa',
     ...        [['bbb',
     ...          [['ccc', []]]],
@@ -72,12 +68,10 @@ def fromList(lines,simple=False):
     True
     '''
 
-    root = FoldrNode(-4,'')
+    root = FoldrNode(-4, '')
     ptr = root
-    for e in lines:
-        depth,code = e
-
-        line = FoldrNode(depth,code)
+    for depth, code in lines:
+        line = FoldrNode(depth, code)
 
         if line.depth > ptr.depth:
             ptr.add(line)
@@ -95,38 +89,38 @@ def fromList(lines,simple=False):
 
     if simple:
         return [simplify(c) for c in root.children]
-    else:
-        return [c for c in root.children]
+    # else:
+    return [c for c in root.children]
 
 
-def fromAttribute(lines,attr,simple=False):
+def from_attribute(lines, attr, simple=False):
     data = []
-    for e in lines:
+    for line in lines:
         try:
-            data.append((getattr(e,attr),e))
-        except:
+            data.append((getattr(line, attr), line))
+        except AttributeError:
             # TODO: anything
             pass
 
-    return fromList(data,simple)
+    return from_list(data, simple)
 
-def fromMethod(lines,attr,simple=False):
+def from_method(lines, attr, simple=False):
     data = []
-    for e in lines:
+    for line in lines:
         try:
-            data.append((getattr(e,attr)(),e))
-        except:
+            data.append((getattr(line, attr)(), line))
+        except AttributeError:
             # TODO: anything
             pass
 
-    return fromList(data,simple)
+    return from_list(data,simple)
 
 
 
-def collapseChars(s):
+def collapse_chars(s):
     during = [s.pop(0)]
-    while len(s) > 0:
-        if type(during[-1]) == type('string') and type(s[0]) == type('string'):
+    while s != []:
+        if isinstance(during[-1], str) and isinstance(s[0], str):
             during[-1] += s.pop(0)
         else:
             during.append(s.pop(0))
@@ -134,15 +128,15 @@ def collapseChars(s):
 
 
 # TODO: optimize
-def lisp(line,char=None):
+def lisp(line, char=None):
     if not char:
-        start,finish = '(',')'
+        start, finish = '(', ')'
     else:
-        start,finish = char
+        start, finish = char
 
     line = list(line)
 
-    assert(line.count(start) == line.count(finish))
+    assert line.count(start) == line.count(finish)
 
 
     while start in line:
@@ -162,58 +156,9 @@ def lisp(line,char=None):
 
         if last != None:
             before = line[:last]
-            during = collapseChars(line[last+1:i])
+            during = collapse_chars(line[last+1:i])
 
             after = line[i+1:]
             line = before+[during]+after
 
-    return collapseChars(line)
-
-
-
-
-
-
-
-'''
-from pprint import pprint
-
-tree = [(0,1),
-        (1,2),
-        (2,3),
-        (2,4),
-        (1,5),
-        (2,6),
-        (2,7)]
-
-tree = fromList(tree,simple=True)
-
-pprint(tree, width=20)
-'''
-
-'''
-for i,ptr in enumerate(makeIterator(tree, type='in-order')):
-    ptr = i
-'''
-
-'''
-import ctypes
-
-
-a = "hello world"
-aPtr = id(a)
-print(aPtr)
-c = ctypes.cast(aPtr,ctypes.py_object)
-print(c.value)
-c.value = 7
-print(c.value)
-'''
-
-'''
-Get iterator lists for each of depth-first and breadth-first search
-through the tree:
-
-for ptr in makeIterator(tree,mode='depth'):
-    ptr = None
-
-'''
+    return collapse_chars(line)

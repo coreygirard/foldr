@@ -1,18 +1,17 @@
 import unittest
 import doctest
 import foldr
-from pprint import pprint
 
 class Test(unittest.TestCase):
     def test_basic(self):
-        data = [(0,'aaa'),
-                (1,'bbb'),
-                (2,'ccc'),
-                (1,'ddd'),
-                (2,'eee'),
-                (2,'fff')]
+        data = [(0, 'aaa'),
+                (1, 'bbb'),
+                (2, 'ccc'),
+                (1, 'ddd'),
+                (2, 'eee'),
+                (2, 'fff')]
 
-        result = foldr.fromList(data,simple=True)
+        result = foldr.from_list(data, simple=True)
         expected = [['aaa',
                      [['bbb',
                        [['ccc', []]]],
@@ -20,47 +19,47 @@ class Test(unittest.TestCase):
                        [['eee', []],
                         ['fff', []]]]]]]
 
-        self.assertEqual(result,expected)
+        self.assertEqual(result, expected)
 
 
-        data = [(0,'aaa'),
-                (1,'bbb'),
-                (0,'ccc'),
-                (1,'ddd')]
+        data = [(0, 'aaa'),
+                (1, 'bbb'),
+                (0, 'ccc'),
+                (1, 'ddd')]
 
-        result = foldr.fromList(data,simple=True)
+        result = foldr.from_list(data, simple=True)
         expected = [['aaa',
-                     [['bbb',[]]]],
+                     [['bbb', []]]],
                     ['ccc',
-                     [['ddd',[]]]]]
+                     [['ddd', []]]]]
 
-        self.assertEqual(result,expected)
+        self.assertEqual(result, expected)
 
 
 class TestFromAttribute(unittest.TestCase):
     def test_from_attribute(self):
         class Example(object):
-            def __init__(self,depth,data):
+            def __init__(self, depth, data):
                 self.depth = depth
                 self.data = data
 
-        data = [Example(0,'aaa'),
-                Example(1,'bbb'),
-                Example(2,'ccc'),
-                Example(1,'ddd'),
-                Example(2,'eee'),
-                Example(2,'fff')]
+        data = [Example(0, 'aaa'),
+                Example(1, 'bbb'),
+                Example(2, 'ccc'),
+                Example(1, 'ddd'),
+                Example(2, 'eee'),
+                Example(2, 'fff')]
 
-        result = foldr.fromAttribute(data,'depth',simple=True)
+        result = foldr.from_attribute(data, 'depth', simple=True)
         #pprint(result)
-        self.assertEqual(len(result),1)
+        self.assertEqual(len(result), 1)
 
-        self.assertEqual(result[0][0].data,'aaa')
-        self.assertEqual(result[0][1][0][0].data,'bbb')
-        self.assertEqual(result[0][1][0][1][0][0].data,'ccc')
-        self.assertEqual(result[0][1][1][0].data,'ddd')
-        self.assertEqual(result[0][1][1][1][0][0].data,'eee')
-        self.assertEqual(result[0][1][1][1][1][0].data,'fff')
+        self.assertEqual(result[0][0].data, 'aaa')
+        self.assertEqual(result[0][1][0][0].data, 'bbb')
+        self.assertEqual(result[0][1][0][1][0][0].data, 'ccc')
+        self.assertEqual(result[0][1][1][0].data, 'ddd')
+        self.assertEqual(result[0][1][1][1][0][0].data, 'eee')
+        self.assertEqual(result[0][1][1][1][1][0].data, 'fff')
 
 class TestLisp(unittest.TestCase):
     def test_lisp(self):
@@ -73,7 +72,7 @@ class TestLisp(unittest.TestCase):
                      ", ",
                      ["'ddd', ",
                       ["'eee', 'fff'"]]]]
-        self.assertEqual(result,expected)
+        self.assertEqual(result, expected)
 
 class TestLispProgram(unittest.TestCase):
     def test_lisp_program(self):
@@ -95,7 +94,7 @@ class TestLispProgram(unittest.TestCase):
                 "}\n"]
         code = ''.join(code)
 
-        result = foldr.lisp(code,char='{}')
+        result = foldr.lisp(code, char='{}')
         #pprint(result)
         expected = [["\n    aaa\n    ",
                      ["\n        bbb\n        ",
@@ -107,7 +106,7 @@ class TestLispProgram(unittest.TestCase):
                       "\n    "],
                      "\n"],
                     "\n"]
-        self.assertEqual(result,expected)
+        self.assertEqual(result, expected)
 
 
 
