@@ -118,6 +118,9 @@ def from_method(lines, attr, simple=False):
 
 
 def collapse_chars(s):
+    if s == []:
+        return s
+
     during = [s.pop(0)]
     while s != []:
         if isinstance(during[-1], str) and isinstance(s[0], str):
