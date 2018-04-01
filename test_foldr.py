@@ -184,11 +184,12 @@ class TestLispHypothesis(unittest.TestCase):
     def test_lisp(self, e):
         before = add_brackets(e)
         expected = [fuse_strings(e)]
+        print(e)
+        print(before)
+        print(expected)
+        print('\n\n\n')
         result = foldr.lisp(before, '{}')
         self.assertEqual(result, expected)
-
-
-
 
 
 def load_tests(loader, tests, ignore):
