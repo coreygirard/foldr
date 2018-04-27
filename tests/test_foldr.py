@@ -2,7 +2,7 @@ import unittest
 import doctest
 
 from hypothesis import given
-from hypothesis.strategies import recursive, lists, from_regex, just, tuples, builds, integers, one_of
+from hypothesis.strategies import recursive, lists, from_regex, just, tuples, builds, integers
 
 import foldr
 
@@ -184,10 +184,7 @@ class TestLispHypothesis(unittest.TestCase):
     def test_lisp(self, e):
         before = add_brackets(e)
         expected = [fuse_strings(e)]
-        print(e)
-        print(before)
-        print(expected)
-        print('\n\n\n')
+
         result = foldr.lisp(before, '{}')
         self.assertEqual(result, expected)
 
