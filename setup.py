@@ -16,8 +16,8 @@ class PyTest(TestCommand):
         errno = pytest.main(self.test_args)
         sys.exit(errno)
 
-setup(name='foldr',
-      version='0.1.1',
+setup(name='foldr2',
+      version='0.1',
       description='Folds linear things into tree things',
       classifiers=['License :: OSI Approved :: MIT License',
                    'Intended Audience :: Developers',
@@ -27,5 +27,5 @@ setup(name='foldr',
       author='Corey Girard',
       author_email='corey.r.girard@gmail.com',
       license='MIT',
-      packages=['foldr'],
+      packages=['foldr2'],
       zip_safe=False)

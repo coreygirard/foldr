@@ -4,7 +4,7 @@ import doctest
 from hypothesis import given
 from hypothesis.strategies import recursive, lists, from_regex, just, tuples, builds, integers
 
-import foldr
+import foldr2 as foldr
 
 
 class Test(unittest.TestCase):
